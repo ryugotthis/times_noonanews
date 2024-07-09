@@ -5,8 +5,7 @@ const getLatestNews = async () => {
   const response = await fetch(url);
   const data = await response.json(); // json은 파일 형식중 하나
   news = data.articles;
-  console.log(`new: ${news}`);
+  console.log(`data: ${news}`);
   console.log(`hi1`);
 };
 getLatestNews();
-console.log(`hi2`);
