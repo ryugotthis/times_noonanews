@@ -1,6 +1,11 @@
 body {
   margin: 2em;
 }
+.head-line-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .icon-button {
   padding: 8px 9px 9px;
   margin-top: 5px;
@@ -9,8 +14,7 @@ body {
   background-color: beige;
 }
 .hide {
-  display: none !important;
-  /* display: none; */
+  display: none;
 }
 .side-menu {
   height: 100%;
@@ -87,8 +91,8 @@ body {
 }
 @media screen and (max-width: 63rem) {
   .hide {
-    display: inline !important;
-    /* display: inline; */
+    /* display: inline !important; */
+    display: inline;
   }
   .menus {
     display: none;
