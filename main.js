@@ -67,7 +67,7 @@ const render = () => {
   <div class="col-lg-8">
     <h2>${news.title}</h2>
     <p>${news.description}</p>
-    <div>${news.source.name} ${moment().startOf('hour').fromNow()}</div>
+    <div>${news.source.name} ${moment(news.publishedAt).fromNow()}</div>
   </div>
 </div>`
     )
