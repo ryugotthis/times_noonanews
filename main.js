@@ -1,6 +1,15 @@
 // const API_KEY = 'a7c947ae7ecb44d6baf7c8b20bcd20e8';
 let mql = window.matchMedia('screen and (max-width: 768px)');
 let newsList = [];
+const menus = document.querySelectorAll('.menus button');
+menus.forEach((menu) =>
+  menu.addEventListener('click', (event) => getNewsByCategory(event))
+);
+
+const sideMenus = document.querySelectorAll('.side-menu-list button');
+sideMenus.forEach((menu) =>
+  menu.addEventListener('click', (event) => getNewsByCategory(event))
+);
 const getLatestNews = async () => {
   const url = new URL(
     `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines`
@@ -11,7 +20,30 @@ const getLatestNews = async () => {
   console.log(newsList);
   render();
 };
-
+const getNewsByCategory = async (event) => {
+  const category = event.target.textContent.toLowerCase();
+  console.log(event.target.textContent.toLowerCase());
+  const url = new URL(
+    `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?category=${category}`
+  );
+  const response = await fetch(url);
+  const data = await response.json(); // json은 파일 형식중 하나
+  newsList = data.articles;
+  // console.log(newsList);
+  render();
+};
+const getNewsByKeyword = async () => {
+  const keyword = document.getElementById('search-input').value;
+  // console.log(userInput.value);
+  const url = new URL(
+    `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?q=${keyword}`
+  );
+  const response = await fetch(url);
+  const data = await response.json(); // json은 파일 형식중 하나
+  newsList = data.articles;
+  console.log(newsList);
+  render();
+};
 const openNav = () => {
   document.getElementById('mySidenav').style.width = '250px';
   // document.getElementById('main').style.marginLeft = '250px';
@@ -37,7 +69,7 @@ const openSearchBox = () => {
 const render = () => {
   const filter = newsList.map((news) => {
     // console.log(typeof news.description);
-    console.log(news.urlToImage.onerror);
+    // console.log(news.urlToImage.onerror);
     if (typeof news.description === 'object') {
       news.description = `내용없음`;
     }
