@@ -37,7 +37,7 @@ const openSearchBox = () => {
 const render = () => {
   const filter = newsList.map((news) => {
     // console.log(typeof news.description);
-    // console.log(news.description);
+    console.log(news.urlToImage.onerror);
     if (typeof news.description === 'object') {
       news.description = `내용없음`;
     }
@@ -48,7 +48,7 @@ const render = () => {
     if (news.source.name === null) {
       news.source.name = `no source`;
     }
-    if (news.urlToImage == null) {
+    if (news.urlToImage === null) {
       news.urlToImage =
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEWgS0uxxEYJ0PsOb2OgwyWvC0Gjp8NUdPw&usqp=CAU';
     }
@@ -60,8 +60,8 @@ const render = () => {
   <div class="col-lg-4">
     <img
       class="news-img-size"
-      src=${news.urlToImage}
-      alt="photo"
+      src=${news.urlToImage} 
+      onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEWgS0uxxEYJ0PsOb2OgwyWvC0Gjp8NUdPw&usqp=CAU';"
     />
   </div>
   <div class="col-lg-8">
