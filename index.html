@@ -38,7 +38,12 @@
           <i class="fas fa-bars hide icon-button" onclick="openNav()"></i>
           <i class="fas fa-search icon-button" onclick="openSearchBox()"></i>
           <span id="input-area">
-            <input type="text" id="search-input" placeholder="search" />
+            <input
+              type="text"
+              id="search-input"
+              onkeypress="enter(event)"
+              placeholder="search"
+            />
             <button class="search-button" onclick="getNewsByKeyword()">
               Go
             </button>

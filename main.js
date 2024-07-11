@@ -38,11 +38,21 @@ const getNewsByKeyword = async () => {
   const url = new URL(
     `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?q=${keyword}`
   );
+
   const response = await fetch(url);
   const data = await response.json(); // json은 파일 형식중 하나
   newsList = data.articles;
   console.log(newsList);
   render();
+  document.getElementById('search-input').value = '';
+  console.log('kkk', keyword);
+};
+const enter = (e) => {
+  if (e.code === 'Enter') {
+    // console.log('hi');
+    getNewsByKeyword();
+    document.getElementById('search-input').value = '';
+  }
 };
 const openNav = () => {
   document.getElementById('mySidenav').style.width = '250px';
