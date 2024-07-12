@@ -10,65 +10,77 @@ const sideMenus = document.querySelectorAll('.side-menu-list button');
 sideMenus.forEach((menu) =>
   menu.addEventListener('click', (event) => getNewsByCategory(event))
 );
+let url = new URL(
+  `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines`
+);
+
+const getNews = async () => {
+  // 데이터 받아서 랜더링하는 공통부분
+  try {
+    const response = await fetch(url);
+    console.log('111', response);
+    const data = await response.json(); // json은 파일 형식중 하나
+    console.log('222', data);
+
+    if (response.status === 200) {
+      newsList = data.articles;
+      render();
+    } else {
+      throw new Error(data.message);
+    }
+  } catch (error) {
+    errorRender(error);
+  }
+};
 const getLatestNews = async () => {
-  const url = new URL(
-    `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines`
+  // 처음 보이는 화면
+  url = new URL(
+    `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headline`
   );
-  const response = await fetch(url);
-  const data = await response.json(); // json은 파일 형식중 하나
-  newsList = data.articles;
-  console.log(newsList);
-  render();
+  await getNews();
 };
 const getNewsByCategory = async (event) => {
+  // 카테고리 클릭하면 보이는 화면
   const category = event.target.textContent.toLowerCase();
-  console.log(event.target.textContent.toLowerCase());
-  const url = new URL(
+  url = new URL(
     `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?category=${category}`
   );
-  const response = await fetch(url);
-  const data = await response.json(); // json은 파일 형식중 하나
-  newsList = data.articles;
-  // console.log(newsList);
-  render();
+  await getNews();
 };
+
 const getNewsByKeyword = async () => {
+  // 키워드 검색하면 보이는 화면
   const keyword = document.getElementById('search-input').value;
-  // console.log(userInput.value);
-  const url = new URL(
+  url = new URL(
     `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?q=${keyword}`
   );
-
-  const response = await fetch(url);
-  const data = await response.json(); // json은 파일 형식중 하나
-  newsList = data.articles;
-  console.log(newsList);
-  render();
+  await getNews();
   document.getElementById('search-input').value = '';
-  console.log('kkk', keyword);
 };
 const enter = (e) => {
+  // 키워드 검색시 엔터 누르면 go버튼 누르는 것과 같게 동작
   if (e.code === 'Enter') {
-    // console.log('hi');
     getNewsByKeyword();
-    document.getElementById('search-input').value = '';
   }
 };
 const openNav = () => {
+  // 사이드바 보일 때
   document.getElementById('mySidenav').style.width = '250px';
   // document.getElementById('main').style.marginLeft = '250px';
   document.body.style.backgroundColor = 'rgba(0,0,0,0.4)';
 };
 
 const closeNav = () => {
+  // 사이드바 닫힐 때
   document.getElementById('mySidenav').style.width = '0';
   // document.getElementById('main').style.marginLeft = '0';
   document.body.style.backgroundColor = 'white';
 };
 
 const openSearchBox = () => {
+  // 돋보기 버튼 누를때 입력창 활성화 비활성화 동작
   let inputArea = document.getElementById('input-area');
-  console.log(inputArea.style.display);
+  // console.log(inputArea.style.display);
   if (inputArea.style.display === 'inline') {
     inputArea.style.display = 'none';
   } else {
@@ -77,68 +89,56 @@ const openSearchBox = () => {
 };
 
 const render = () => {
-  const filter = newsList.map((news) => {
-    // console.log(typeof news.description);
-    // console.log(news.urlToImage.onerror);
-    if (typeof news.description === 'object') {
-      news.description = `내용없음`;
-    }
-    if (news.description.length >= 200) {
-      news.description = `${news.description.slice(0, 200)}...`;
-    }
-    console.log(news.source.name);
-    if (news.source.name === null) {
-      news.source.name = `no source`;
-    }
-    if (news.urlToImage === null) {
-      news.urlToImage =
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEWgS0uxxEYJ0PsOb2OgwyWvC0Gjp8NUdPw&usqp=CAU';
-    }
-  });
+  // 화면 랜더링
+  // console.log('rrr', newsList.length);
 
   const newsHTML = newsList
     .map(
       (news) => `<div class="row news">
-  <div class="col-lg-4">
-    <img
-      class="news-img-size"
-      src=${news.urlToImage} 
-      onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEWgS0uxxEYJ0PsOb2OgwyWvC0Gjp8NUdPw&usqp=CAU';"
-    />
-  </div>
-  <div class="col-lg-8">
-    <h2>${news.title}</h2>
-    <p>${news.description}</p>
-    <div>${news.source.name} ${moment(news.publishedAt).fromNow()}</div>
-  </div>
-</div>`
+    <div class="col-lg-4">
+      <img
+        class="news-img-size"
+        src=${
+          news.urlToImage ||
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEWgS0uxxEYJ0PsOb2OgwyWvC0Gjp8NUdPw&usqp=CAU'
+        }
+        onerror="this.onerror=null; this.src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqEWgS0uxxEYJ0PsOb2OgwyWvC0Gjp8NUdPw&usqp=CAU';"
+      />
+    </div>
+    <div class="col-lg-8">
+      <h2>${news.title}</h2>
+      <p>${
+        news.description == null || news.description == ''
+          ? '내용없음'
+          : news.description.length > 200
+          ? news.description.slice(0, 200) + '...'
+          : news.description
+      }</p>
+      <div>${news.source.name || 'no source'} ${moment(
+        news.publishedAt
+      ).fromNow()}</div>
+    </div>
+  </div>`
     )
     .join('');
 
-  document.getElementById('newsBoard').innerHTML = newsHTML;
-};
-//기존 반복문 사용해서 렌더링
-// const render = () => {
-//   let newsHTML = '';
-//   for (let i = 0; i < newsList.length; i++) {
-//     console.log(newsList[i]);
-//     newsHTML += `<div class="row news">
-//         <div class="col-lg-4">
-//           <img
-//             class="news-img-size"
-//             src=${newsList[i].urlToImage}
-//             alt="제니"
-//           />
-//         </div>
-//         <div class="col-lg-8">
-//           <h2>${newsList[i].title}</h2>
-//           <p>${newsList[i].description}</p>
-//           <div>${newsList[i].author}</div>
-//         </div>
-//       </div>`;
-//   }
+  // console.log(newsHTML);
 
-//   document.getElementById('newsBoard').innerHTML = newsHTML;
-// };
+  document.getElementById('newsBoard').innerHTML = newsHTML;
+
+  try {
+    if (newsList < 1) {
+      throw new Error();
+    }
+  } catch (error) {
+    const errorMessage = 'No matches for your search';
+    errorRender(errorMessage);
+  }
+};
+
+const errorRender = (error) =>
+  (document.getElementById(
+    'newsBoard'
+  ).innerHTML = `<div class="error-box">${error}</div>`);
 
 getLatestNews();
