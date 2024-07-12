@@ -35,7 +35,7 @@ const getNews = async () => {
 const getLatestNews = async () => {
   // 처음 보이는 화면
   url = new URL(
-    `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headline`
+    `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines`
   );
   await getNews();
 };
