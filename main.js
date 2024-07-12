@@ -57,10 +57,10 @@ const getNewsByKeyword = async () => {
   await getNews();
   document.getElementById('search-input').value = '';
 };
-const enter = (e) => {
+const enter = async (e) => {
   // 키워드 검색시 엔터 누르면 go버튼 누르는 것과 같게 동작
   if (e.code === 'Enter') {
-    getNewsByKeyword();
+    await getNewsByKeyword();
   }
 };
 const openNav = () => {
