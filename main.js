@@ -23,13 +23,19 @@ const getNews = async () => {
     console.log('222', data);
 
     if (response.status === 200) {
+      if (data.articles.length < 1) {
+        throw new Error('No matches for your search');
+      }
+      //     throw new Error();
       newsList = data.articles;
       render();
     } else {
       throw new Error(data.message);
+      // throw new Error(response.status);
     }
   } catch (error) {
-    errorRender(error);
+    console.log(error);
+    errorRender(error.message);
   }
 };
 const getLatestNews = async () => {
@@ -125,15 +131,6 @@ const render = () => {
   // console.log(newsHTML);
 
   document.getElementById('newsBoard').innerHTML = newsHTML;
-
-  try {
-    if (newsList < 1) {
-      throw new Error();
-    }
-  } catch (error) {
-    const errorMessage = 'No matches for your search';
-    errorRender(errorMessage);
-  }
 };
 
 const errorRender = (error) =>
