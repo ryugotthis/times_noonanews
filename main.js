@@ -153,7 +153,7 @@ const errorRender = (error) =>
   ).innerHTML = `<div class="error-box">${error}</div>`);
 
 const paginationRender = () => {
-  //페이지
+  //페이지네이션 랜더링
   // totalREsult, page, pageSize, groupSize, totalPages, lastPage, firstPage
   const pageGroup = Math.ceil(page / groupSize);
   const totalPages = Math.ceil(totalResults / pageSize);
