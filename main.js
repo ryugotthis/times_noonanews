@@ -13,14 +13,21 @@ sideMenus.forEach((menu) =>
 let url = new URL(
   `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines`
 );
-
+let totalResults = 0;
+let page = 1;
+const pageSize = 10;
+const groupSize = 5;
 const getNews = async () => {
   // 데이터 받아서 랜더링하는 공통부분
   try {
+    url.searchParams.set('page', page); //url함수 속성, 쿼리만들어줌 &page=page
+    url.searchParams.set('pageSize', pageSize);
+
     const response = await fetch(url);
-    console.log('111', response);
+    if (!response.ok) {
+      throw new Error('Failed to fetch');
+    }
     const data = await response.json(); // json은 파일 형식중 하나
-    console.log('222', data);
 
     if (response.status === 200) {
       if (data.articles.length < 1) {
@@ -28,14 +35,21 @@ const getNews = async () => {
       }
       //     throw new Error();
       newsList = data.articles;
+      totalResults = data.totalResults;
+      console.log(totalResults);
       render();
+      paginationRender();
     } else {
-      throw new Error(data.message);
-      // throw new Error(response.status);
+      // throw new Error(data.message);
+      console.log('rrr', response.status);
+      throw new Error(data.message || 'Failed to fetch data');
     }
   } catch (error) {
-    console.log(error);
-    errorRender(error.message);
+    if (error instanceof TypeError) {
+      errorRender('Network error: Failed to fetch data');
+    } else {
+      errorRender(error.message);
+    }
   }
 };
 const getLatestNews = async () => {
@@ -138,4 +152,47 @@ const errorRender = (error) =>
     'newsBoard'
   ).innerHTML = `<div class="error-box">${error}</div>`);
 
+const paginationRender = () => {
+  //페이지
+  // totalREsult, page, pageSize, groupSize, totalPages, lastPage, firstPage
+  const pageGroup = Math.ceil(page / groupSize);
+  const totalPages = Math.ceil(totalResults / pageSize);
+  let lastPage = pageGroup * groupSize;
+  if (lastPage > totalPages) {
+    lastPage = totalPages;
+  }
+  const firstPage =
+    lastPage - groupSize + 1 <= 0 ? 1 : lastPage - groupSize + 1;
+
+  let paginationHTML =
+    page - 1 < 1
+      ? ''
+      : `<li class="page-item" onclick="moveToPage(1)">
+                        <a class="page-link">&lt;&lt;</a>
+                      </li>
+                      <li class="page-item" onclick="moveToPage(${page - 1})">
+                        <a class="page-link" >&lt;</a>
+                      </li>`;
+
+  for (let i = firstPage; i <= lastPage; i++) {
+    paginationHTML += `<li class="page-item ${
+      i === page ? 'active' : ''
+    }" onclick="moveToPage(${i})"><a class="page-link" >${i}</a></li>`;
+  }
+
+  paginationHTML +=
+    page >= totalPages
+      ? ''
+      : `<li class="page-item" onclick="moveToPage(${
+          page + 1
+        })"><a  class="page-link">&gt;</a></li><li class="page-item" onclick="moveToPage(${totalPages})">
+                        <a class="page-link" >&gt;&gt;</a>
+                       </li>`;
+  document.querySelector('.pagination').innerHTML = paginationHTML;
+};
+const moveToPage = (pageNum) => {
+  console.log(pageNum);
+  page = pageNum;
+  getNews();
+};
 getLatestNews();

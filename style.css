@@ -94,6 +94,28 @@ body {
   text-align: center;
   background-color: rgba(250, 196, 205, 0.855);
 }
+.pagination {
+  margin: 1em;
+  display: flex;
+  /* align-content: center; */
+  justify-content: center;
+  /* color: gray; */
+  /* border: 1px solid gray; */
+}
+.page-link {
+  cursor: pointer;
+  color: rgb(81, 77, 77);
+  border: 1px solid gray;
+}
+.page-link:hover {
+  background-color: black;
+  color: white;
+}
+.page-item.active .page-link {
+  background-color: black;
+  color: white;
+  border-color: gray;
+}
 
 @media screen and (max-width: 63rem) {
   .hide {
