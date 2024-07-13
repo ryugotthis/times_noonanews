@@ -24,6 +24,7 @@ const getNews = async () => {
     url.searchParams.set('pageSize', pageSize);
 
     const response = await fetch(url);
+    console.log(response);
     if (!response.ok) {
       throw new Error('Failed to fetch');
     }
@@ -61,6 +62,7 @@ const getLatestNews = async () => {
 };
 const getNewsByCategory = async (event) => {
   // 카테고리 클릭하면 보이는 화면
+  page = 1; // 카테고리 선택시 첫 페이지로 이동
   const category = event.target.textContent.toLowerCase();
   url = new URL(
     `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?category=${category}`
@@ -70,6 +72,8 @@ const getNewsByCategory = async (event) => {
 
 const getNewsByKeyword = async () => {
   // 키워드 검색하면 보이는 화면
+  page = 1; // 키워드 검색시 첫 페이지로 이동
+  console.log(page);
   const keyword = document.getElementById('search-input').value;
   url = new URL(
     `https://noona-times-be-5ca9402f90d9.herokuapp.com/top-headlines?q=${keyword}`
