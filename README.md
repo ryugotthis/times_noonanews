@@ -1,7 +1,7 @@
 # TIMES NEWS website(타임즈 뉴스 웹사이트)
 
-![]("img/demo.png")
-![]("img/demo-mobile.png")
+![](img/demo.png)
+![](img/demo-mobile.png)
 
 ## 사용한 기술
 
